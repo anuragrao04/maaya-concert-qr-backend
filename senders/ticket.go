@@ -50,6 +50,13 @@ func SendTicket(c *gin.Context) {
 		return
 	}
 
+	if user.Email == "" {
+		// this dude didn't fill the google form
+		// we only have his payment ack
+		// try sending to srn@pesu.pes.edu
+		user.Email = user.SRN + "@pesu.pes.edu"
+	}
+
 	err = mailers.SendTicket(qrFilePath, user.Email)
 	if err != nil {
 		log.Println("Error sending ticket:", err)

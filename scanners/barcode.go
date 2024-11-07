@@ -24,6 +24,16 @@ func ScanBarcode(c *gin.Context) {
 		})
 		return
 	}
+
+	if user.IsPresent {
+		// this user is already marked present
+		c.JSON(401, gin.H{
+			"user":    user,
+			"message": "User already marked present",
+		})
+		return
+	}
+
 	err = database.SetPresent(&user)
 	if err != nil {
 		log.Println("Error updating user:", err)

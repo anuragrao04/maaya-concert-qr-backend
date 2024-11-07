@@ -54,6 +54,15 @@ func ScanQR(c *gin.Context) {
 		return
 	}
 
+	if user.IsPresent {
+		// this user is already marked present
+		c.JSON(401, gin.H{
+			"user":    user,
+			"message": "User already marked present",
+		})
+		return
+	}
+
 	err = database.SetPresent(&user)
 	go googleSheets.UpdateRowColorByID(user.ID)
 
