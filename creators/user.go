@@ -3,7 +3,6 @@ package creators
 import (
 	"log"
 
-	"github.com/anuragrao04/maaya-concert-qr/backups"
 	"github.com/anuragrao04/maaya-concert-qr/database"
 	"github.com/anuragrao04/maaya-concert-qr/models"
 	"github.com/gin-gonic/gin"
@@ -12,9 +11,15 @@ import (
 type createUserRequestFormat struct {
 	PRN      string `json:"prn"`
 	SRN      string `json:"srn"`
+	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Semester string `json:"semester"`
 	Branch   string `json:"branch"`
+
+	// only for outside people
+	IsPesticide           bool   `json:"isPesticide"`
+	PesticideReferralSRN  string `json:"pesticideReferralSRN"`
+	PesticideReferralName string `json:"pesticideReferralName"`
 }
 
 func CreateUser(c *gin.Context) {
@@ -24,9 +29,14 @@ func CreateUser(c *gin.Context) {
 	newUser := models.User{
 		PRN:      request.PRN,
 		SRN:      request.SRN,
+		Email:    request.Email,
 		Name:     request.Name,
 		Semester: request.Semester,
 		Branch:   request.Branch,
+
+		IsPesticide:           request.IsPesticide,
+		PesticideReferralSRN:  request.PesticideReferralSRN,
+		PesticideReferralName: request.PesticideReferralName,
 	}
 
 	log.Println(newUser)
@@ -38,8 +48,6 @@ func CreateUser(c *gin.Context) {
 		})
 		return
 	}
-
-	go backups.IncrementWriteCount()
 
 	c.JSON(200, gin.H{
 		"message": "User Created Successfully",

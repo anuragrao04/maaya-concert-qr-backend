@@ -3,8 +3,8 @@ package scanners
 import (
 	"log"
 
-	"github.com/anuragrao04/maaya-concert-qr/backups"
 	"github.com/anuragrao04/maaya-concert-qr/database"
+	"github.com/anuragrao04/maaya-concert-qr/googleSheets"
 	"github.com/anuragrao04/maaya-concert-qr/models"
 	"github.com/gin-gonic/gin"
 )
@@ -32,10 +32,8 @@ func ScanBarcode(c *gin.Context) {
 		})
 		return
 	}
-	go backups.IncrementWriteCount()
-
+	go googleSheets.UpdateRowColorByID(user.ID)
 	c.JSON(200, gin.H{
-		"message": "User found",
-		"user":    user,
+		"user": user,
 	})
 }

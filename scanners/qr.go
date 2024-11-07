@@ -1,12 +1,15 @@
 package scanners
 
 import (
+	// "github.com/anuragrao04/maaya-concert-qr/googleSheets"
+	"github.com/anuragrao04/maaya-concert-qr/database"
+	"github.com/anuragrao04/maaya-concert-qr/googleSheets"
 	"github.com/anuragrao04/maaya-concert-qr/tokens"
 	"github.com/gin-gonic/gin"
 )
 
 type scanQRRequestFormat struct {
-	JWT string `json:"prn"`
+	JWT string `json:"jwt"`
 }
 
 func ScanQR(c *gin.Context) {
@@ -38,5 +41,21 @@ func ScanQR(c *gin.Context) {
 	}
 
 	// return the claims if everything went well
-	c.JSON(200, claims)
+	// googleSheets.UpdateRowColorByPRN(claims)
+
+	userIDFloat, _ := claims["userID"].(float64)
+	userID := uint(userIDFloat)
+
+	user, err := database.GetUserByID(userID)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "User not found",
+		})
+		return
+	}
+
+	err = database.SetPresent(&user)
+	go googleSheets.UpdateRowColorByID(user.ID)
+
+	c.JSON(200, user)
 }
