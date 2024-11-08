@@ -39,11 +39,16 @@ func main() {
 	os.Mkdir("tempTickets", 0777)
 
 	router := gin.Default()
-	router.POST("/create", creators.CreateUser)
 	router.POST("/scan-barcode", scanners.ScanBarcode)
 	router.POST("/scan-qr", scanners.ScanQR)
-	router.POST("/send-ticket", senders.SendTicket)
-	router.GET("/send-ticket-to-all", senders.SendTicketToAll)
-	router.GET("/populate-sheet", googleSheets.PopulateSheetWithDBValues)
+
+	// only allow these routes in setup mode
+	if os.Getenv("ENVIRONMENT") == "SETUP" {
+		router.POST("/create", creators.CreateUser)
+		router.POST("/send-ticket", senders.SendTicket)
+		router.GET("/send-ticket-to-all", senders.SendTicketToAll)
+		router.GET("/populate-sheet", googleSheets.PopulateSheetWithDBValues)
+	}
+
 	router.Run(":6969")
 }
