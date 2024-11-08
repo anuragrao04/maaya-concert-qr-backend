@@ -2,6 +2,7 @@ package senders
 
 import (
 	"log"
+	"encoding/base64"
 
 	"github.com/anuragrao04/maaya-concert-qr/database"
 	"github.com/anuragrao04/maaya-concert-qr/mailers"
@@ -100,4 +101,32 @@ func SendTicketToAll(c *gin.Context) {
 	}
 
 	c.JSON(202, gin.H{"message": "Sending tickets"})
+}
+
+func GetTicket(c *gin.Context) {
+	var req sendTicketRequest
+	err := c.BindJSON(&req)
+	if err != nil || (req.PRN == "") {
+		c.JSON(400, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	var user models.User
+
+	user, err = database.GetUser(req.PRN)
+
+	if err != nil {
+		c.JSON(404, gin.H{"error": "User not found"})
+		return
+	}
+
+	qrPng, err := tokens.GetQRPng(&user)
+	if err != nil {
+		log.Println("Error creating QR:", err)
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+
+	c.JSON(200, gin.H{"image": base64.StdEncoding.EncodeToString(qrPng), "message": "Ticket"})
 }

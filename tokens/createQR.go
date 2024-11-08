@@ -15,6 +15,27 @@ import (
 
 var JWT_SECRET []byte
 
+func GetQRPng(user *models.User) ([]byte, error) {
+	var q *qrcode.QRCode
+
+	JWTString, err := CreateJWT(user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	q, err = qrcode.New(JWTString, qrcode.Medium)
+
+	if err != nil {
+		return nil, err
+	}
+
+	q.BackgroundColor = color.RGBA{10, 18, 58, 255}
+	q.ForegroundColor = color.NRGBA{15, 213, 178, 255}
+
+	return q.PNG(5120)
+}
+
 func CreateQR(user *models.User) (qrFilePath string, err error) {
 	// first we create a JWT
 	JWTString, err := CreateJWT(user)

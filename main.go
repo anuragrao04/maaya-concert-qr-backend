@@ -48,6 +48,7 @@ func main() {
 		router.POST("/send-ticket", senders.SendTicket)
 		router.GET("/send-ticket-to-all", senders.SendTicketToAll)
 		router.GET("/populate-sheet", googleSheets.PopulateSheetWithDBValues)
+		router.GET("/get-ticket", senders.GetTicket)
 	}
 
 	router.Run(":6969")
