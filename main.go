@@ -43,6 +43,7 @@ func main() {
 	router.POST("/scan-barcode", scanners.ScanBarcode)
 	router.POST("/scan-qr", scanners.ScanQR)
 	router.POST("/send-ticket", senders.SendTicket)
+	router.GET("/send-ticket-to-all", senders.SendTicketToAll)
 	router.GET("/populate-sheet", googleSheets.PopulateSheetWithDBValues)
 	router.Run(":6969")
 }

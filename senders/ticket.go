@@ -65,3 +65,39 @@ func SendTicket(c *gin.Context) {
 
 	c.JSON(200, gin.H{"message": "Ticket sent"})
 }
+
+func SendTicketToAll(c *gin.Context) {
+
+	users, err := database.GetAllUsers()
+	if err != nil {
+		log.Println("Error getting users:", err)
+		c.JSON(500, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	for _, user := range users {
+		go func(user models.User) {
+			qrFilePath, err := tokens.CreateQR(&user)
+			if err != nil {
+				log.Println("Error creating QR:", err)
+				c.JSON(500, gin.H{"error": "Internal server error"})
+				return
+			}
+
+			if user.Email == "" {
+				// this dude didn't fill the google form
+				// we only have his payment ack
+				// try sending to srn@pesu.pes.edu
+				user.Email = user.SRN + "@pesu.pes.edu"
+			}
+
+			err = mailers.SendTicket(qrFilePath, user.Email)
+			if err != nil {
+				log.Printf("Error sending ticket to %s: %s\n", user.Email, err)
+			}
+
+		}(user)
+	}
+
+	c.JSON(202, gin.H{"message": "Sending tickets"})
+}
