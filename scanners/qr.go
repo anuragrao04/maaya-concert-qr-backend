@@ -2,6 +2,9 @@ package scanners
 
 import (
 	// "github.com/anuragrao04/maaya-concert-qr/googleSheets"
+
+	"log"
+
 	"github.com/anuragrao04/maaya-concert-qr/database"
 	"github.com/anuragrao04/maaya-concert-qr/googleSheets"
 	"github.com/anuragrao04/maaya-concert-qr/tokens"
@@ -41,7 +44,6 @@ func ScanQR(c *gin.Context) {
 	}
 
 	// return the claims if everything went well
-	// googleSheets.UpdateRowColorByPRN(claims)
 
 	userIDFloat, _ := claims["userID"].(float64)
 	userID := uint(userIDFloat)
@@ -64,7 +66,17 @@ func ScanQR(c *gin.Context) {
 	}
 
 	err = database.SetPresent(&user)
+
+	if err != nil {
+		log.Println("Error updating user:", err)
+		c.JSON(500, gin.H{
+			"message": "Failed to update user",
+		})
+		return
+	}
 	go googleSheets.UpdateRowColorByID(user.ID)
 
-	c.JSON(200, user)
+	c.JSON(200, gin.H{
+		"user": user,
+	})
 }

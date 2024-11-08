@@ -35,6 +35,7 @@ func ScanBarcode(c *gin.Context) {
 	}
 
 	err = database.SetPresent(&user)
+
 	if err != nil {
 		log.Println("Error updating user:", err)
 		c.JSON(500, gin.H{

@@ -4,13 +4,13 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	PRN       string `gorm:"index"`
-	SRN       string
-	Email     string
-	Name      string
-	Semester  string
-	Branch    string
-	IsPresent bool
+	PRN       string `gorm:"index" json:"prn"`
+	SRN       string `json:"srn"`
+	Email     string `json:"email"`
+	Name      string `json:"name"`
+	Semester  string `json:"semester"`
+	Branch    string `json:"branch"`
+	IsPresent bool   `json:"isPresent"`
 
 	// only for outside pes people
 	IsPesticide           bool   `json:"isPesticide"`
