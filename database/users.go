@@ -6,26 +6,36 @@ import (
 )
 
 func GetUserByID(id uint) (user models.User, err error) {
+	DBLock.Lock()
+	defer DBLock.Unlock()
 	err = DB.First(&user, id).Error
 	return
 }
 func GetUser(prn string) (user models.User, err error) {
+	DBLock.Lock()
+	defer DBLock.Unlock()
 	err = DB.Where("prn = ?", prn).First(&user).Error
 	return
 }
 
 func GetUserByEmail(email string) (user models.User, err error) {
+	DBLock.Lock()
+	defer DBLock.Unlock()
 	err = DB.Where("email = ?", email).First(&user).Error
 	return
 }
 
 func SetPresent(user *models.User) (err error) {
+	DBLock.Lock()
+	defer DBLock.Unlock()
 	err = DB.Model(&user).Update("is_present", true).Error
 	go backups.IncrementWriteCount()
 	return
 }
 
 func CreateUser(user *models.User) (err error) {
+	DBLock.Lock()
+	defer DBLock.Unlock()
 	err = DB.Create(user).Error
 	go backups.IncrementWriteCount()
 
@@ -33,6 +43,8 @@ func CreateUser(user *models.User) (err error) {
 }
 
 func GetAllUsers() (users []models.User, err error) {
+	DBLock.Lock()
+	defer DBLock.Unlock()
 	err = DB.Find(&users).Error
 	return
 }
