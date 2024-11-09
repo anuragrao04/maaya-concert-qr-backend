@@ -18,6 +18,7 @@ type createUserRequestFormat struct {
 
 	// only for outside people
 	IsPesticide           bool   `json:"isPesticide"`
+	AadharNo              string `json:"aadharNo"`
 	PesticideReferralSRN  string `json:"pesticideReferralSRN"`
 	PesticideReferralName string `json:"pesticideReferralName"`
 	AadharNumber          string `json:"aadharNumber"`
@@ -36,6 +37,7 @@ func CreateUser(c *gin.Context) {
 		Branch:   request.Branch,
 
 		IsPesticide:           request.IsPesticide,
+		AadharNo:              request.AadharNo,
 		PesticideReferralSRN:  request.PesticideReferralSRN,
 		PesticideReferralName: request.PesticideReferralName,
 		AadharNumber:          request.AadharNumber,

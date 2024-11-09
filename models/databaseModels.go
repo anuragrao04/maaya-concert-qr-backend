@@ -14,6 +14,7 @@ type User struct {
 
 	// only for outside pes people
 	IsPesticide           bool   `json:"isPesticide"`
+	AadharNo              string `json:"aadharNo"`
 	PesticideReferralSRN  string `json:"pesticideReferralSRN"`
 	PesticideReferralName string `json:"pesticideReferralName"`
 	AadharNumber          string `json:"aadharNumber"`
