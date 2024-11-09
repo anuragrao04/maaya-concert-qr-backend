@@ -10,7 +10,7 @@ var writeCount uint64
 
 func Backup() {
 	log.Println("20 writes done, backing up!")
-	exec.Command("scp", "prod.db", "root@cdn.maaya-pes.co:~")
+	exec.Command("scp", "maaya-concert.db", "root@cdn.maaya-pes.co:~")
 }
 
 func IncrementWriteCount() {
