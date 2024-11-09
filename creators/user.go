@@ -20,6 +20,7 @@ type createUserRequestFormat struct {
 	IsPesticide           bool   `json:"isPesticide"`
 	PesticideReferralSRN  string `json:"pesticideReferralSRN"`
 	PesticideReferralName string `json:"pesticideReferralName"`
+	AadharNumber          string `json:"aadharNumber"`
 }
 
 func CreateUser(c *gin.Context) {
@@ -37,6 +38,7 @@ func CreateUser(c *gin.Context) {
 		IsPesticide:           request.IsPesticide,
 		PesticideReferralSRN:  request.PesticideReferralSRN,
 		PesticideReferralName: request.PesticideReferralName,
+		AadharNumber:          request.AadharNumber,
 	}
 
 	log.Println(newUser)

@@ -16,4 +16,5 @@ type User struct {
 	IsPesticide           bool   `json:"isPesticide"`
 	PesticideReferralSRN  string `json:"pesticideReferralSRN"`
 	PesticideReferralName string `json:"pesticideReferralName"`
+	AadharNumber          string `json:"aadharNumber"`
 }
